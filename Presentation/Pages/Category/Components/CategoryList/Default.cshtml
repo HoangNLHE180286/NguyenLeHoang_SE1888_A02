@@ -1,0 +1,47 @@
+﻿@using Core.Enums
+@using Presentation.Models.Data
+
+@model List<CategoryData>
+
+<table class="table-striped table-bordered table text-center align-middle">
+    <thead class="table-primary">
+        <tr>
+            <th>No. </th>
+            <th>@Html.DisplayNameFor(model => model.First().Name)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Description)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Status)</th>
+            <th>Parent Category</th>
+            <th>Article Quantity</th>
+            <th style="width: 350px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any()) {
+            var count = 1;
+            foreach (var item in Model) {
+                <tr>
+                    <td>@count</td>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" data-id="@item.Id" type="checkbox" role="switch" id="switch-status-@item.Id" checked="@(item.Status == Status.Active)">
+                            <label class="form-check-label" for="switch-status-@item.Id">@item.Status.ToString()</label>
+                        </div>
+                    </td>
+                    <td>@(item.Parent == null ? "-" : item.Parent.Name)</td>
+                    <td>@item.ArticleQuantity</td>
+                    <td>
+                        <a asp-action="Edit" class="btn btn-sm btn-warning me-1" data-bs-toggle="modal" data-bs-target="#modal" data-action-type="@(ActionType.Update)" data-id="@item.Id"><i class="bi bi-pencil-square"></i>Edit</a>
+                        <a asp-action="Delete" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modal" data-action-type="@(ActionType.Delete)" data-id="@item.Id"> <i class="bi bi-trash"></i>Delete</a>
+                    </td>
+                </tr>
+                count++;
+            }
+        } else {
+            <tr>
+                <td colspan="6" class="text-muted text-center">No records found!</td>
+            </tr>
+        }
+    </tbody>
+</table>

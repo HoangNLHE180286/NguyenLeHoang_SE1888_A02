@@ -1,0 +1,102 @@
+﻿@using Presentation.Models.Data
+@using Core.Enums
+@model List<ArticleData>
+
+<table class="table-striped table-bordered table text-center align-middle">
+    <thead class="table-primary">
+        <tr>
+            <th>No.</th>
+            <th>@Html.DisplayNameFor(model => model.First().Title)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Headline)</th>
+            <th>@Html.DisplayNameFor(model => model.First().CreatedAt)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Content)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Source)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Category)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Tags)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Status)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Author)</th>    
+            <th>@Html.DisplayNameFor(model => model.First().ModifiedAt)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Modifier)</th>
+            <th style="width: 300px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model?.Any() == true) {
+            var count = 1;
+            foreach (var item in Model) {
+                <tr>
+                    <td>@count</td>
+                    <td class="text-start">@item.Title</td>
+                    <td class="text-start">@item.Headline</td>
+                    <td>@item.CreatedAt.ToString("dd-MM-yyyy HH:mm")</td>
+                    <td class="text-truncate text-start" style="max-width: 250px;" title="@item.Content">
+                        @(item.Content?.Length > 100 ? item.Content.Substring(0, 100) + "..." : item.Content)
+                    </td>
+                    <td class="text-start">@item.Source</td>
+                    <td>@(item.Category ?? "-")</td>
+                    <td>
+                        @if (item.Tags == null || !item.Tags.Any()) {
+                            <span>-</span>
+                        } else {
+                            @foreach (var tag in item.Tags) {
+                                <span class="badge bg-info me-1">@tag.Name</span>
+                            }
+                        }
+                    </td>
+                    <td>
+                        <div class="form-check form-switch d-flex justify-content-center">
+                            <input class="form-check-input toggle-status"
+                                   type="checkbox"
+                                   role="switch"
+                                   id="switch-status-@item.Id"
+                                   data-id="@item.Id"
+                                   checked="@(item.Status == Status.Active)">
+                            <label class="form-check-label ms-1" for="switch-status-@item.Id">
+                                @item.Status.ToString()
+                            </label>
+                        </div>
+                    </td>
+                    <td>@item.Author</td>
+                    <td>@(item.Modifier ?? "-")</td>
+                    <td>@(item.ModifiedAt?.ToString("dd-MM-yyyy HH:mm") ?? "-")</td>
+
+                    <td>
+                        <div class="d-flex justify-content-center flex-wrap gap-1">
+                            <a asp-action="Edit"
+                               class="btn btn-sm btn-warning"
+                               data-bs-toggle="modal"
+                               data-bs-target="#modal"
+                               data-action-type="@(ActionType.Update)"
+                               data-id="@item.Id">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+
+                            <a asp-action="Duplicate"
+                               class="btn btn-sm btn-secondary"
+                               data-bs-toggle="modal"
+                               data-bs-target="#modal"
+                               data-action-type="@(ActionType.Duplicate)"
+                               data-id="@item.Id">
+                                <i class="bi bi-files"></i> Duplicate
+                            </a>
+
+                            <a asp-action="Delete"
+                               class="btn btn-sm btn-danger"
+                               data-bs-toggle="modal"
+                               data-bs-target="#modal"
+                               data-action-type="@(ActionType.Delete)"
+                               data-id="@item.Id">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                count++;
+            }
+        } else {
+            <tr>
+                <td colspan="13" class="text-muted text-center">No articles found!</td>
+            </tr>
+        }
+    </tbody>
+</table>

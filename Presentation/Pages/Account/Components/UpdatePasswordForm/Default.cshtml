@@ -1,0 +1,28 @@
+﻿@model Presentation.Models.Params.UpdatePasswordParams
+
+<div class="mb-3">
+    <small>Account Name: @Model.Name</small>
+</div>
+
+<div class="mb-3">
+    <label for="old-password" class="form-label">Old Password<span class="text-danger">*</span></label>
+    <input asp-for="OldPassword" type="password" class="form-control" id="old-password"
+           placeholder="Enter old password" />
+    <span asp-validation-for="OldPassword" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label for="new-password" class="form-label">New Password<span class="text-danger">*</span></label>
+    <input asp-for="NewPassword" type="password" class="form-control" id="new-password"
+           placeholder="Enter new password" />
+    <span asp-validation-for="NewPassword" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label for="confirm-password" class="form-label">Confirm Password<span class="text-danger">*</span></label>
+    <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirm-password"
+           placeholder="Confirm password" />
+    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,40 @@
+﻿
+@using Core.Enums
+@using Presentation.Models.Data
+@model List<AccountData>
+
+<table class="table-striped table-bordered table text-center align-middle">
+    <thead class="table-primary">
+        <tr>
+            <th>No. </th>
+            <th>@Html.DisplayNameFor(model => model.First().Name)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Email)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Role)</th>
+            <th style="width: 350px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model?.Any() == true) {
+            var count = 1;
+            foreach (var item in Model) {
+                <tr>
+                    <td>@count</td>
+                    <td>@item.Name</td>
+                    <td>@item.Email</td>
+
+                    <td>@item.Role</td>
+                    <td>
+                        <a asp-action="Update Password" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modal" data-action-type="@(ActionType.UpdatePassword)" data-id="@item.Id" class="btn btn-sm btn-info me-1"> <i class="bi bi-key"></i> Update Password</a>
+                        <a asp-action="Edit" class="btn btn-sm btn-warning me-1" data-bs-toggle="modal" data-bs-target="#modal" data-action-type="@(ActionType.Update)" data-id="@item.Id"><i class="bi bi-pencil-square"></i> Edit</a>
+                        <a asp-action="Delete" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modal" data-action-type="@(ActionType.Delete)" data-id="@item.Id"><i class="bi bi-trash"></i> Delete</a>
+                    </td>
+                </tr>
+                count++;
+            }
+        } else {
+            <tr>
+                <td colspan="6" class="text-muted text-center">No records found!</td>
+            </tr>
+        }
+    </tbody>
+</table>

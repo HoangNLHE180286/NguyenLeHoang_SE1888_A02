@@ -1,0 +1,86 @@
+﻿@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var session = HttpContextAccessor.HttpContext?.Session;
+    var username = session.GetString("Username");
+    var role = session.GetString("UserRole") ?? "Lecture";
+
+    var page = ViewContext.RouteData.Values["page"]?.ToString();
+
+    var hideHeader = page == "/Account/Login" || page == "/Account/Register";
+
+    var partialNavbar = $"Navbar/_Nav{role}";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Presentation</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Presentation.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+</head>
+<body>
+    @if (!hideHeader) {
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3 bg-white">
+                <div class="container-fluid">
+                    <a class="navbar-brand" asp-area="" asp-page="/Index">FU - News</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse d-sm-inline-flex justify-content-between collapse">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                            </li>
+                            @await Html.PartialAsync(partialNavbar)
+                        </ul>
+                        @if (username != null) {
+                            <div class="dropdown">
+                                <a class="dropdown-toggle text-dark text-decoration-none" href="#" data-bs-toggle="dropdown">
+                                    @username (@role)
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <form method="post" asp-page="/Index" asp-page-handler="Logout">
+                                            <button type="submit" class="dropdown-item">Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        } else {
+                            <a class="d-inline-block me-3" asp-page="/Account/Login">
+                                Login
+                            </a>
+                        }
+                    </div>
+                </div>
+            </nav>
+        </header>
+    }
+    <div>
+        <main role="main" class="pb-3">
+            <partial name="_Notification" />
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - Presentation - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

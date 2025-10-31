@@ -1,0 +1,41 @@
+﻿@page 
+@model Presentation.Pages.IndexModel  
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<!-- CHANGE: Bỏ select2 vì không dùng ở home, tránh conflict JS -->
+<!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
+
+<div class="mx-5 text-center">
+    <h2 class="mb-5 text-center">Article</h2>
+
+    <div class="table-responsive shadow-sm" id="article-table-container"></div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <!-- CHANGE: Bỏ select2 JS vì không cần -->
+
+    <script>
+        $(document).ready(function () {
+            const container = $('#article-table-container');
+            container.html('<div class="text-center p-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Loading articles...</p></div>');
+
+            // CHANGE: AJAX với console.log để debug (xem Network tab nếu fail)
+            $.ajax({
+                url: '/?handler=HomeArticleList',
+                type: 'GET',
+                success: function (html) {
+                    console.log('AJAX success:', html);  <!-- CHANGE: Log để check response -->
+                    container.html(html);
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX error:', status, error, xhr.responseText);  <!-- CHANGE: Log chi tiết error -->
+                    container.html('<div class="alert alert-danger text-center"><strong>Error:</strong> ' + (xhr.responseText || error) + '</div>');
+                }
+            });
+        });
+    </script>
+}

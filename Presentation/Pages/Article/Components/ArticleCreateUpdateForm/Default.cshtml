@@ -1,0 +1,71 @@
+﻿@using Core.Enums
+@model Presentation.Models.Params.CreateUpdateArticleParams
+@{
+    var action = (ActionType)ViewData["ActionType"];
+}
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label for="title" class="form-label">Title<span class="text-danger">*</span></label>
+        <input id="title" asp-for="Title" placeholder="Enter article title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label for="headline" class="form-label">Headline<span class="text-danger">*</span></label>
+        <input id="headline" asp-for="Headline" placeholder="Enter short headline" class="form-control" />
+        <span asp-validation-for="Headline" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="mb-3">
+    <label for="content" class="form-label">Content<span class="text-danger">*</span></label>
+    <textarea id="content" asp-for="Content" class="form-control" rows="6" placeholder="Write article content here..."></textarea>
+    <span asp-validation-for="Content" class="text-danger"></span>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label for="category" class="form-label">Category</label>
+        <select id="category" asp-for="CategoryId" class="form-select">
+            <option value="0" selected="@(action == ActionType.Create)">-- Select category --</option>
+            @if (ViewData["Categories"] is List<SelectListItem> categories) {
+                foreach (var category in categories) {
+                    <option value="@category.Value" selected="@(category.Selected)">
+                        @category.Text
+                    </option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="col-md-6">
+        <label for="source" class="form-label">Source</label>
+        <input id="source" asp-for="Source" class="form-control" placeholder="Enter source (optional)" />
+    </div>
+</div>
+
+<div class="mb-3">
+    <label for="tagIds" class="form-label">Tags</label>
+    <select id="tagIds" asp-for="TagIds" class="form-select select2" multiple size="5">
+        @if (ViewData["Tags"] is List<SelectListItem> tags) {
+            foreach (var tag in tags) {
+                <option value="@tag.Value" selected="@tag.Selected">
+                    @tag.Text
+                </option>
+            }
+        }
+    </select>
+    <small class="form-text text-muted">Hold Ctrl (or Cmd) to select multiple tags.</small>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#tagIds').select2({
+                placeholder: 'Select tags',
+                width: '100%'
+            });
+        });
+    </script>
+}

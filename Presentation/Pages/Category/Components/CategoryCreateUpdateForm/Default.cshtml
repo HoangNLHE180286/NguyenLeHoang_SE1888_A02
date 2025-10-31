@@ -1,0 +1,35 @@
+﻿@using Core.Enums
+@using Presentation.Models.Data
+@model Presentation.Models.Params.CreateUpdateCategoryParams
+
+@{
+    var action = (ActionType)ViewData["ActionType"];
+    var categories = ViewData["Categories"] as List<CategoryData>;
+}
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label for="name" class="form-label">Name</label>
+        <input id="name" asp-for="Name" placeholder="Enter name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label for="role" class="form-label">Parent</label>
+        <select id="role" asp-for="ParentId" class="form-select">
+            <option value="0" selected="@(action == ActionType.Create)">None</option>
+            @foreach (var category in categories ?? []) {
+                <option value="@category.Id"
+                        selected="@(action == ActionType.Update && Model.ParentId == category.Id)">
+                    @category.Name
+                </option>
+            }
+        </select>
+    </div>
+</div>
+
+<div class="col-12">
+    <label for="description" class="form-label">Description</label>
+    <textarea id="description" asp-for="Description" placeholder="Enter description" class="form-control" rows="3"></textarea>
+    <span asp-validation-for="Description" class="text-danger"></span>
+</div>

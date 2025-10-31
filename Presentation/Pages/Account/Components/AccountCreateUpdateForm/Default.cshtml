@@ -1,0 +1,43 @@
+﻿@using Core.Enums
+@model Presentation.Models.Params.CreateUpdateAccountParams
+@{
+    var action = (ActionType)ViewData["ActionType"];
+}
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
+        <input id="name" asp-for="Name" placeholder="Enter name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label for="role" class="form-label">Role</label>
+        <select id="role" asp-for="Role" class="form-select">
+            <option value="@(Role.Staff)">Staff</option>
+            <option value="@(Role.Lecture)">Lecturer</option>
+        </select>
+
+    </div>
+</div>
+
+<div class="mb-3">
+    <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
+    <input id="email" placeholder="Enter email" asp-for="Email" class="form-control" />
+    <span asp-validation-for="Email" class="text-danger"></span>
+</div>
+
+@if (action == ActionType.Create) {
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label class="form-label" for="password">Password<span class="text-danger">*</span></label>
+            <input id="password" name="Password" type="password" class="form-control" placeholder="Enter password" />
+            <span class="err-pass-msg text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label" for="confirm-password">Confirm Password<span class="text-danger">*</span></label>
+            <input id="confirm-password" type="password" class="form-control" placeholder="Confirm password" />
+            <span class="err-confirm-msg text-danger"></span>
+        </div>
+    </div>
+}                              

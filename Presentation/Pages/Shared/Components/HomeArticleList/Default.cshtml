@@ -1,0 +1,58 @@
+﻿@using Presentation.Models.Data
+@using Core.Enums
+@model List<ArticleData>
+
+<div class="table-responsive shadow-sm">  <!-- CHANGE: Wrap table trong div để responsive, khớp container gốc -->
+    <table class="table table-striped table-bordered table-hover text-center align-middle">  <!-- CHANGE: Thêm table-hover cho UX tốt hơn -->
+        <thead class="table-primary">
+            <tr>
+                <th>No.</th>
+                <th>@Html.DisplayNameFor(model => model.First().Title)</th>  <!-- CHANGE: Giữ cột chính, bỏ ModifiedAt/Modifier -->
+                <th>@Html.DisplayNameFor(model => model.First().Headline)</th>
+                <th>@Html.DisplayNameFor(model => model.First().CreatedAt)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Content)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Source)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Category)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Tags)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Status)</th>  <!-- CHANGE: Hiển thị status như text, không toggle -->
+                <th>@Html.DisplayNameFor(model => model.First().Author)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model?.Any() == true) {
+                var count = 1;
+                foreach (var item in Model) {
+                    <tr>  <!-- CHANGE: Row đơn giản, không form-switch hay buttons actions -->
+                        <td>@count</td>
+                        <td class="text-start font-weight-bold">@item.Title</td>  <!-- CHANGE: Bold title cho nổi bật -->
+                        <td class="text-start">@item.Headline</td>
+                        <td>@item.CreatedAt.ToString("dd-MM-yyyy HH:mm")</td>
+                        <td class="text-truncate text-start" style="max-width: 250px; cursor: pointer;" title="@item.Content">
+                            @(item.Content?.Length > 100 ? item.Content.Substring(0, 100) + "..." : item.Content)
+                        </td>  <!-- CHANGE: Thêm cursor: pointer nếu muốn clickable sau -->
+                        <td class="text-start">@(item.Source ?? "-")</td>
+                        <td class="text-capitalize">@(item.Category ?? "-")</td>
+                        <td>
+                            @if (item.Tags == null || !item.Tags.Any()) {
+                                <span class="text-muted">-</span>
+                            } else {
+                                @foreach (var tag in item.Tags) {
+                                    <span class="badge bg-info text-dark me-1 fs-6">@tag.Name</span>  <!-- CHANGE: Badge nhỏ hơn cho home -->
+                                }
+                            }
+                        </td>
+                        <td>
+                            <span class="badge @(item.Status == Status.Active ? "bg-success" : "bg-secondary")">@item.Status</span>  <!-- CHANGE: Badge màu cho status, read-only -->
+                        </td>
+                        <td>@(item.Author ?? "-")</td>
+                    </tr>
+                    count++;
+                }
+            } else {
+                <tr>
+                    <td colspan="11" class="text-muted text-center py-4">No articles found!</td>  <!-- CHANGE: Colspan điều chỉnh theo số cột mới -->
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
